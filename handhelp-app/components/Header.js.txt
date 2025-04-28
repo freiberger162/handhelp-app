@@ -1,0 +1,17 @@
+import { useTheme } from 'next-themes';
+
+export default function Header() {
+  const { theme, setTheme } = useTheme();
+  return (
+    <header className="flex justify-between items-center p-4 bg-black text-white">
+      <h1 className="text-xl font-bold text-orange-400">Hand Help</h1>
+      <div className="space-x-4">
+        <span>WhatsApp: (49) 99135-3812</span>
+        <span>PIX: 80064559963</span>
+        <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+          {theme === 'dark' ? '☀️' : '🌙'}
+        </button>
+      </div>
+    </header>
+  );
+}

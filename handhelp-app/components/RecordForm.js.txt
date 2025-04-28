@@ -1,0 +1,43 @@
+import { useState, useEffect } from 'react';
+import { saveRecords } from '../utils/storage';
+
+export default function RecordForm({ records, setRecords, initial }) {
+  const [data, setData] = useState(initial);
+
+  useEffect(() => { saveRecords(records) }, [records]);
+
+  const handleChange = e => {
+    const { name, value, type, checked } = e.target;
+    setData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    if (initial.id) {
+      setRecords(records.map(r => r.id === initial.id ? data : r));
+    } else {
+      setRecords([...records, { ...data, id: records.length + 1 }]);
+    }
+    window.location.href = '/';
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="p-4 space-y-2">
+      <input type="date" name="date" value={data.date||''} onChange={handleChange} required />
+      <input name="clientName" placeholder="Nome do Cliente" value={data.clientName||''} onChange={handleChange} required />
+      <input type="number" name="original" placeholder="Valor Original" step="0.01" value={data.original||''} onChange={handleChange} required />
+      <input type="number" name="margin" placeholder="Margem (%)" step="0.01" value={data.margin||''} onChange={handleChange} required />
+      <select name="service" value={data.service||''} onChange={handleChange} required>
+        <option value="">Serviço</option>
+        <option>Pintor</option>
+        <option>Pedreiro</option>
+        <option>Vidraceiro</option>
+        <option>Diarista</option>
+        <option>Encanador</option>
+        <option>Eletricista</option>
+      </select>
+      <textarea name="description" placeholder="Descrição" value={data.description||''} onChange={handleChange}></textarea>
+      <button type="submit" className="bg-orange-500 text-white px-4 py-2 rounded">Salvar</button>
+    </form>
+  );
+}

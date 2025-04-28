@@ -1,0 +1,34 @@
+import { useState, useEffect } from 'react';
+import { getRecords } from '../utils/storage';
+import Fuse from 'fuse.js';
+import Link from 'next/link';
+
+export default function Home() {
+  const [records, setRecords] = useState([]);
+  const [query, setQuery] = useState('');
+
+  useEffect(() => { getRecords().then(setRecords) }, []);
+  const fuse = new Fuse(records, { keys: ['clientName','id'] });
+  const results = query ? fuse.search(query).map(r => r.item) : records;
+
+  return (
+    <div className="p-4">
+      <Link href="/form"><a className="bg-orange-500 text-white px-4 py-2 rounded">Novo Cadastro</a></Link>
+      <input
+        className="border p-2 mt-2 w-full"
+        placeholder="Buscar por nome ou ID"
+        value={query}
+        onChange={e => setQuery(e.target.value)}
+      />
+      <ul className="mt-4">
+        {results.map(r => (
+          <li key={r.id}>
+            <Link href={`/detail/${r.id}`}>
+              <a>{r.clientName} ({r.id}) – {r.status || '—'}</a>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}

@@ -1,0 +1,9 @@
+import { useState, useEffect } from 'react';
+import { getRecords } from '../utils/storage';
+import RecordForm from '../components/RecordForm';
+
+export default function Form() {
+  const [records, setRecords] = useState([]);
+  useEffect(() => { getRecords().then(setRecords) }, []);
+  return <RecordForm records={records} setRecords={setRecords} initial={{}} />;
+}

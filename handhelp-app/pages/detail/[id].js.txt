@@ -1,0 +1,20 @@
+import { useRouter } from 'next/router';
+import { getRecords, saveRecords } from '../../utils/storage';
+import { useState, useEffect } from 'react';
+import RecordForm from '../../components/RecordForm';
+
+export default function Detail() {
+  const { query } = useRouter();
+  const [records, setRecords] = useState([]);
+  const [current, setCurrent] = useState(null);
+
+  useEffect(() => {
+    getRecords().then(data => {
+      setRecords(data);
+      setCurrent(data.find(r => r.id === +query.id) || {});
+    });
+  }, [query.id]);
+
+  if (!current) return <p>Carregando…</p>;
+  return <RecordForm records={records} setRecords={setRecords} initial={current} />;
+}

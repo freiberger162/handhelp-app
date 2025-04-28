@@ -1,0 +1,10 @@
+import localforage from 'localforage';
+const store = localforage.createInstance({ name: 'handhelp_records' });
+
+export async function getRecords() {
+  return (await store.getItem('records')) || [];
+}
+
+export async function saveRecords(records) {
+  await store.setItem('records', records);
+}
